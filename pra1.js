@@ -25,7 +25,7 @@ Al final: bloque de VALIDACIÓN por consola (tal y como nos lo pide la práctica
 
 // 1. Creación de la clase Pokemon, que representa a un objeto Pokemon
 class Pokemon {
-  constructor({ id, name, description, height, weight, baseExperience, types, sprites, stats }) {
+  constructor({ id, name, description, height, weight, baseExperience, abilities, types, sprites, stats }) {
     this.id = id;
     this.name = name;
     this.description = description;
@@ -210,37 +210,58 @@ const charmander = new Pokemon({
 
 
 // Uso de getters y setters
-
+// Demuestro los getters
+console.log('Nombre:', pikachu.pokemonName);
+console.log('Peso:', pikachu.pokemonWeight);
+console.log('Tipo principal:', pikachu.mainType);
+console.log('Ataque:', pikachu.attack);
+// Demuestro los setters
+// nombre
+const oldName = pikachu.pokemonName;
+pikachu.pokemonName = oldName + ' TEST';
+console.log('Nombre (después de setter):', pikachu.pokemonName);
+pikachu.pokemonName = oldName; // Lo vuelvo a dejar como antes
+// tipo principal
+const oldType = pikachu.mainType;
+pikachu.mainType = oldType === 'electric' ? 'fire' : 'electric';
+console.log('Tipo principal (después de setter):', pikachu.mainType);
+pikachu.mainType = oldType; // Lo vuelvo a dejar como antes
+// peso
+const oldWeight = pikachu.pokemonWeight;
+pikachu.pokemonWeight = oldWeight + 1;
+console.log('Peso (después de setter):', pikachu.pokemonWeight);
+pikachu.pokemonWeight = oldWeight; // Lo vuelvo a dejar como antes
 
 // Crear una lista de Pokémons
-
+const list = new PokemonList();
 
 // Ejemplo 1: añadir un Pokémon
-
+list.addPokemon(pikachu);
 
 // Ejemplo 2: añadir múltiples Pokémons
-
+list.addMultiplePokemons(bulbasaur, charmander);
 
 // Ejemplo 3: eliminar un Pokémon
-
+list.removePokemon(999);
 
 // Ejemplo 4: eliminar un Pokémon
-
+list.removePokemon(1);
 
 // Ejemplo 5: mostrar la lista de Pokémons
-
+console.log('--- showList ---');
+list.showList();
 
 // Ejemplo 6: obtener Pokémon por rango de peso
-
+console.log('Peso 60..90 ->', list.getPokemonsByWeightRange(60, 90).map(p => p.name));
 
 // Ejemplo 7: ordenar Pokémon por experiencia base
-
+console.log('Orden por baseExp ->', list.sortPokemonsByBaseExperience().map(p => p.name));
 
 // Ejemplo 8: F. Recursiva para buscar un Pokémon por ID
-
+console.log('Buscar id=4 ->', findPokemonById(list, 4)?.name);
 
 // Ejemplo 9: Tipo más común
-
+console.log('Tipo más común ->', getMostCommonType(list));
 
 // Ejemplo 10: Pokémon fuertes por ataque
-
+console.log('Fuertes (atk >= 50) ->', getStrongPokemons(list, 50));
