@@ -6,24 +6,28 @@ Autor: Mateo Berger
 
 Fecha: 2025-11-11
 
+
 Contenido:
+  class Pokemon (propiedades + getters/setters)
 
-class Pokemon (propiedades + getters/setters)
+  class PokemonList (add/remove/show)
 
-class PokemonList (add/remove/show)
+  Arrow fns en PokemonList: addMultiplePokemons, getPokemonsByWeightRange, sortPokemonsByBaseExperience
 
-Arrow fns en PokemonList: addMultiplePokemons, getPokemonsByWeightRange, sortPokemonsByBaseExperience
+  Función recursiva: findPokemonById
 
-Función recursiva: findPokemonById
+  reduce: getMostCommonType
 
-reduce: getMostCommonType
+  map+filter: getStrongPokemons
 
-map+filter: getStrongPokemons
+  Al final: bloque de VALIDACIÓN por consola (tal y como nos lo pide la práctica)
 
-Al final: bloque de VALIDACIÓN por consola (tal y como nos lo pide la práctica)
+Comentarios:
+  Comentaré decisiones, pre/post-condiciones y propósito (me ahorro lo obvio)
 */
 
 // 1. Creación de la clase Pokemon, que representa a un objeto Pokemon
+/*Esta clase representa un Pokémon, y contiene solamente datos (sin dependencias).*/
 class Pokemon {
   constructor({ id, name, description, height, weight, baseExperience, abilities, types, sprites, stats }) {
     this.id = id;
@@ -39,6 +43,7 @@ class Pokemon {
   }
 
   // === Getters y Setters ===
+  /* Los setters y getters permiten cambiar validaciones y representaciones sin romper lo demás. */
   get pokemonName() { return this.name; }
   set pokemonName(newName) { this.name = newName; }
 
@@ -47,6 +52,7 @@ class Pokemon {
 
   // Tipo principal (primer tipo del array)
   get mainType() { return Array.isArray(this.types) && this.types.length > 0 ? this.types[0] : undefined; }
+  // Si no existe el array de tipos, lo crea, si está vacio, lo inserta y sino, reemplaza el primero.
   set mainType(t) {
     if (!Array.isArray(this.types)) this.types = [];
     if (this.types.length === 0) this.types.push(t);
@@ -63,7 +69,7 @@ class Pokemon {
 // 2. Creación de la clase PokemonList
 class PokemonList {
   constructor() {
-    this.items = [];
+    this.items = []; // almacena obejtos Pokemon
   }
 
   // Añadir un Pokémon a la lista
@@ -105,26 +111,31 @@ class PokemonList {
 
 // 4. Función recursiva para buscar un Pokémon por ID
 function findPokemonById(pokemonList, id, index = 0) {
+  // normalizo a array
   const arr = Array.isArray(pokemonList) ? pokemonList
             : Array.isArray(pokemonList?.items) ? pokemonList.items
             : [];
 
-  if (index >= arr.length) return null;
-  return arr[index].id === id ? arr[index]
-                              : findPokemonById(arr, id, index + 1);
+  if (index >= arr.length) return null; // este es el caso base fallido
+  return arr[index].id === id ? arr[index] // caso base exitoso
+                              : findPokemonById(arr, id, index + 1); // y aqui sigue
 }
 
 // 5. Uso de reduce para encontrar el tipo más común
+/* Cuenta la frecuencia de cada tipo y devuelve el más común.
+    Si queda empatado, devuelve el primero recorrido. */
 function getMostCommonType(pokemonList) {
   const arr = Array.isArray(pokemonList) ? pokemonList
             : Array.isArray(pokemonList?.items) ? pokemonList.items
             : [];
 
+  // contabilizo los tipos por frecuencia
   const counts = arr.reduce((acc, p) => {
     (p.types || []).forEach(t => { acc[t] = (acc[t] ?? 0) + 1; });
     return acc;
   }, {});
 
+  // selecciono el más común
   let best = null;
   let max = -1;
   for (const [type, n] of Object.entries(counts)) {
@@ -134,6 +145,8 @@ function getMostCommonType(pokemonList) {
 }
 
 // 6. Uso de map y filter para obtener Pokémon fuertes por ataque
+/* Devuelve un array con los nombres de los Pokémon cuyo valor de ataque es mayor o igual a minAttack
+   Aqui no asumo orden ni estructura*/
 function getStrongPokemons(pokemons, minAttack) {
   const arr = Array.isArray(pokemons) ? pokemons
             : Array.isArray(pokemons?.items) ? pokemons.items
